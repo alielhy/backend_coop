@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ coop.name }}{% if coop.tagline_short %} — {{ coop.tagline_short }}{% endif %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,500&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../story-style.css">
+</head>
+<body class="jr">
+
+  <header class="jr-nav">
+    <div class="jr-brand">{{ coop.name }}</div>
+    <nav aria-label="{{ i18n.nav_label }}" class="jr-nav-links">
+      <a href="#about">{{ i18n.nav_about }}</a>
+      {% if coop.gallery %}<a href="#gallery">{{ i18n.nav_gallery }}</a>{% endif %}
+      {% if coop.products %}<a href="#products">{{ i18n.nav_products }}</a>{% endif %}
+      <a href="#contact">{{ i18n.nav_contact }}</a>
+    </nav>
+    <div class="jr-lang" aria-label="{{ i18n.lang_label }}">
+      {% for l in lang_switch %}<a href="{{ l.url }}" class="{{ 'active' if l.active }}">{{ l.code|upper }}</a>{% if not loop.last %}<span>/</span>{% endif %}{% endfor %}
+    </div>
+  </header>
+
+  <section class="jr-hero">
+    {% if coop.gallery and coop.gallery[0].image_url %}
+    <img src="{{ coop.gallery[0].image_url }}" alt="{{ coop.hero_photo_alt }}">
+    {% else %}
+    <div class="jr-ph-hero"></div>
+    {% endif %}
+    <div class="jr-hero-scrim"></div>
+    <div class="jr-hero-copy">
+      {% if coop.eyebrow %}<div class="jr-eyebrow">{{ coop.eyebrow }}</div>{% endif %}
+      <h1>{{ coop.name }}</h1>
+      {% if coop.tagline %}<p class="jr-tagline">{{ coop.tagline }}</p>{% endif %}
+    </div>
+  </section>
+
+  <section id="about" class="jr-section">
+    <div class="jr-kicker">01 — {{ i18n.about_title }}</div>
+    <div class="jr-about-grid">
+      <div class="jr-about-copy">
+        {% for para in coop.about_paragraphs %}
+        <p{% if loop.first %} class="jr-lede"{% endif %}>{{ para }}</p>
+        {% endfor %}
+      </div>
+      <div class="jr-stats">
+        {% if coop.founded_year %}<div><span>{{ coop.founded_year }}</span><small>{{ i18n.stat_founded }}</small></div>{% endif %}
+        {% if coop.member_count %}<div><span>{{ coop.member_count }}</span><small>{{ i18n.stat_members }}</small></div>{% endif %}
+        {% if coop.province %}<div><span>{{ coop.province }}</span><small>{{ i18n.stat_region }}</small></div>{% endif %}
+      </div>
+    </div>
+    {% if coop.facts %}
+    <ul class="jr-facts">
+      <li class="jr-facts-label">{{ i18n.facts_label }}</li>
+      {% for fact in coop.facts %}<li>{{ fact }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </section>
+
+  {% if coop.gallery %}
+  <section id="gallery" class="jr-section jr-section-bleed">
+    <div class="jr-kicker jr-kicker-pad">02 — {{ i18n.gallery_title }}</div>
+    <div class="jr-photo-essay">
+      {% for g in coop.gallery %}
+      <figure class="{{ 'jr-full' if loop.index0 % 3 == 0 else 'jr-half' }}">
+        {% if g.image_url %}<img src="{{ g.image_url }}" alt="{{ g.alt }}">{% else %}<div class="jr-ph"></div>{% endif %}
+        {% if g.alt %}<figcaption>{{ g.alt }}</figcaption>{% endif %}
+      </figure>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if coop.products %}
+  <section id="products" class="jr-section">
+    <div class="jr-kicker">03 — {{ i18n.products_title }}</div>
+    <p class="jr-lede jr-products-sub">{{ i18n.products_sub }}</p>
+    <ul class="jr-product-list">
+      {% for p in coop.products %}
+      <li>
+        <span class="jr-product-index">{{ "%02d"|format(loop.index) }}</span>
+        <span class="jr-product-name">{{ p.name }}</span>
+        {% if p.description %}<span class="jr-product-desc">{{ p.description }}</span>{% endif %}
+        {% if p.price %}<span class="jr-product-price">{{ p.price }}</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <section id="contact" class="jr-contact">
+    <div class="jr-kicker jr-kicker-light">— {{ i18n.contact_title }}</div>
+    {% if coop.contact_intro %}<p class="jr-contact-intro">{{ coop.contact_intro }}</p>{% endif %}
+    <ul class="jr-contact-list">
+      {% for item in coop.contact_items %}<li><span>{{ item.label }}</span>{{ item.value }}</li>{% endfor %}
+    </ul>
+    {% if coop.social_links %}
+    <div class="jr-social">
+      {% for s in coop.social_links %}<a href="{{ s.url }}">{{ s.label }}</a>{% endfor %}
+    </div>
+    {% endif %}
+  </section>
+
+  <footer class="jr-footer">{{ footer_copy }}</footer>
+
+</body>
+</html>

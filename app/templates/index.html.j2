@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ coop.name }} — {{ coop.tagline_short }}</title>
+<link rel="stylesheet" href="{{ asset_prefix }}style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">
+      <span class="star-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 2 L24 16 L38 20 L24 24 L20 38 L16 24 L2 20 L16 16 Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="brand-name">{{ coop.name }}</span>
+    </a>
+
+    <nav class="main-nav" aria-label="{{ i18n.nav_label }}">
+      <a href="#produits">{{ i18n.nav_products }}</a>
+      <a href="#apropos">{{ i18n.nav_about }}</a>
+      <a href="#galerie">{{ i18n.nav_gallery }}</a>
+      <a href="#contact">{{ i18n.nav_contact }}</a>
+    </nav>
+
+    <div class="lang-switch" role="group" aria-label="{{ i18n.lang_label }}">
+      {% for l in lang_switch %}
+      <a class="lang-btn{% if l.active %} is-active{% endif %}" href="{{ l.url }}">{{ l.code | upper }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow">{{ coop.eyebrow }}</p>
+        <h1 class="hero-title">{{ coop.name }}</h1>
+        <p class="hero-tagline">{{ coop.tagline }}</p>
+        <div class="hero-actions">
+          <a href="#produits" class="btn btn-primary">{{ i18n.cta_products }}</a>
+          <a href="#contact" class="btn btn-ghost">{{ i18n.cta_contact }}</a>
+        </div>
+        <dl class="hero-stats">
+          <div class="stat">
+            <dt>{{ i18n.stat_founded }}</dt>
+            <dd>{{ coop.founded_year }}</dd>
+          </div>
+          <div class="stat">
+            <dt>{{ i18n.stat_members }}</dt>
+            <dd>{{ coop.member_count }}</dd>
+          </div>
+          <div class="stat">
+            <dt>{{ i18n.stat_region }}</dt>
+            <dd>{{ coop.province }}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="hero-media">
+        <div class="hero-photo" role="img" aria-label="{{ coop.hero_photo_alt }}"></div>
+        <p class="hero-caption">{{ coop.hero_caption }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="about" id="apropos">
+    <div class="wrap about-inner">
+      <div class="about-text">
+        <span class="section-mark" aria-hidden="true">✦</span>
+        <h2>{{ i18n.about_title }}</h2>
+        {% for paragraph in coop.about_paragraphs %}
+        <p>{{ paragraph }}</p>
+        {% endfor %}
+      </div>
+      <ul class="fact-pills" aria-label="{{ i18n.facts_label }}">
+        {% for fact in coop.facts %}
+        <li>{{ fact }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PRODUCTS ============ -->
+  {% if coop.products %}
+  <section class="products" id="produits">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-mark" aria-hidden="true">✦</span>
+        <h2>{{ i18n.products_title }}</h2>
+        <p class="section-sub">{{ i18n.products_sub }}</p>
+      </div>
+
+      <div class="product-grid">
+        {% for product in coop.products %}
+        <article class="product-card">
+          {% if product.image_url %}
+          <img class="product-photo" src="{{ product.image_url }}" alt="{{ product.name }}">
+          {% else %}
+          <div class="product-photo product-photo--{{ loop.cycle('olive', 'herbs', 'rug') }}"></div>
+          {% endif %}
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <span class="price">{{ product.price }}</span>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ============ GALLERY ============ -->
+  {% if coop.gallery %}
+  <section class="gallery" id="galerie">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-mark" aria-hidden="true">✦</span>
+        <h2>{{ i18n.gallery_title }}</h2>
+      </div>
+      <div class="gallery-grid">
+        {% for photo in coop.gallery %}
+        {% if photo.image_url %}
+        <img class="gallery-photo" src="{{ photo.image_url }}" alt="{{ photo.alt }}">
+        {% else %}
+        <div class="gallery-photo gallery-photo--{{ loop.cycle('1', '2', '3', '4') }}"></div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ============ CONTACT ============ -->
+  <section class="contact" id="contact">
+    <div class="wrap contact-inner">
+      <div class="contact-text">
+        <span class="section-mark" aria-hidden="true">✦</span>
+        <h2>{{ i18n.contact_title }}</h2>
+        <p>{{ coop.contact_intro }}</p>
+        <ul class="contact-list">
+          {% for item in coop.contact_items %}
+          <li>
+            <span class="contact-label">{{ item.label }}</span>
+            <span>{{ item.value }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="contact-map" role="img" aria-label="{{ i18n.map_label }}"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <span class="star-mark star-mark--small" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 2 L24 16 L38 20 L24 24 L20 38 L16 24 L2 20 L16 16 Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span>{{ coop.name }}</span>
+    </div>
+    {% if coop.social_links %}
+    <div class="footer-social">
+      {% for link in coop.social_links %}
+      <a href="{{ link.url }}">{{ link.label }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <p class="footer-copy">{{ i18n.footer_copy }}</p>
+  </div>
+</footer>
+
+</body>
+</html>

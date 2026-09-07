@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ dir }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ coop.name }}{% if coop.tagline_short %} — {{ coop.tagline_short }}{% endif %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Work+Sans:wght@400;500;600;700;800&family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../market-style.css">
+</head>
+<body class="mk">
+
+  <header class="mk-nav">
+    <div class="mk-brand">{{ coop.name }}</div>
+    <nav aria-label="{{ i18n.nav_label }}" class="mk-nav-links">
+      <a href="#products">{{ i18n.nav_products }}</a>
+      <a href="#about">{{ i18n.nav_about }}</a>
+      {% if coop.gallery %}<a href="#gallery">{{ i18n.nav_gallery }}</a>{% endif %}
+      <a href="#contact">{{ i18n.nav_contact }}</a>
+    </nav>
+    <div class="mk-lang" aria-label="{{ i18n.lang_label }}">
+      {% for l in lang_switch %}<a href="{{ l.url }}" class="{{ 'active' if l.active }}">{{ l.code|upper }}</a>{% endfor %}
+    </div>
+  </header>
+
+  <section class="mk-hero">
+    <div class="mk-hero-copy">
+      {% if coop.eyebrow %}<div class="mk-eyebrow">{{ coop.eyebrow }}</div>{% endif %}
+      <h1>{{ coop.name }}</h1>
+      {% if coop.tagline %}<p class="mk-tagline">{{ coop.tagline }}</p>{% endif %}
+      <div class="mk-hero-actions">
+        <a href="#products" class="mk-btn mk-btn-solid">{{ i18n.cta_products }}</a>
+        <a href="#contact" class="mk-btn mk-btn-outline">{{ i18n.cta_contact }}</a>
+      </div>
+    </div>
+    <div class="mk-hero-visual">
+      {% if coop.gallery and coop.gallery[0].image_url %}
+      <img src="{{ coop.gallery[0].image_url }}" alt="{{ coop.hero_photo_alt }}">
+      {% else %}
+      <div class="mk-ph-big"></div>
+      {% endif %}
+      {% if coop.founded_year %}<div class="mk-tag mk-tag-hero">{{ i18n.stat_founded }} {{ coop.founded_year }}</div>{% endif %}
+    </div>
+  </section>
+
+  <div class="mk-ticker" aria-hidden="true">
+    <span>{{ coop.province or coop.name }}</span><span>★</span>
+    <span>{{ i18n.products_title }}</span><span>★</span>
+    {% if coop.member_count %}<span>{{ coop.member_count }}</span><span>★</span>{% endif %}
+    <span>{{ coop.province or coop.name }}</span><span>★</span>
+    <span>{{ i18n.products_title }}</span><span>★</span>
+  </div>
+
+  <section id="products" class="mk-section">
+    <h2 class="mk-shout">{{ i18n.products_title }}</h2>
+    <p class="mk-sub">{{ i18n.products_sub }}</p>
+    <div class="mk-product-grid">
+      {% for p in coop.products %}
+      <article class="mk-product-card {{ 'mk-tall' if loop.index0 % 5 == 2 }}">
+        <div class="mk-product-thumb">
+          {% if p.image_url %}<img src="{{ p.image_url }}" alt="{{ p.name }}">{% else %}<div class="mk-ph"></div>{% endif %}
+          {% if p.price %}<span class="mk-hangtag">{{ p.price }}</span>{% endif %}
+        </div>
+        <div class="mk-product-body">
+          <h3>{{ p.name }}</h3>
+          {% if p.description %}<p>{{ p.description }}</p>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="about" class="mk-about">
+    <div class="mk-about-stats">
+      {% if coop.founded_year %}<div><span>{{ coop.founded_year }}</span><small>{{ i18n.stat_founded }}</small></div>{% endif %}
+      {% if coop.member_count %}<div><span>{{ coop.member_count }}</span><small>{{ i18n.stat_members }}</small></div>{% endif %}
+      {% if coop.province %}<div><span>{{ coop.province }}</span><small>{{ i18n.stat_region }}</small></div>{% endif %}
+    </div>
+    <div class="mk-about-copy">
+      <h2>{{ i18n.about_title }}</h2>
+      {% for para in coop.about_paragraphs %}<p>{{ para }}</p>{% endfor %}
+      {% if coop.facts %}
+      <ul class="mk-facts">
+        {% for fact in coop.facts %}<li>{{ fact }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if coop.gallery %}
+  <section id="gallery" class="mk-section">
+    <h2 class="mk-shout">{{ i18n.gallery_title }}</h2>
+    <div class="mk-gallery-grid">
+      {% for g in coop.gallery %}
+      <div class="mk-frame {{ 'mk-tilt-l' if loop.index0 is even else 'mk-tilt-r' }}">
+        {% if g.image_url %}<img src="{{ g.image_url }}" alt="{{ g.alt }}">{% else %}<div class="mk-ph"></div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <section id="contact" class="mk-contact">
+    <h2 class="mk-shout mk-shout-light">{{ i18n.contact_title }}</h2>
+    {% if coop.contact_intro %}<p class="mk-contact-intro">{{ coop.contact_intro }}</p>{% endif %}
+    <div class="mk-contact-grid">
+      <ul class="mk-contact-list">
+        {% for item in coop.contact_items %}<li><span>{{ item.label }}</span>{{ item.value }}</li>{% endfor %}
+      </ul>
+      {% if coop.social_links %}
+      <div class="mk-social">
+        {% for s in coop.social_links %}<a href="{{ s.url }}">{{ s.label }}</a>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <footer class="mk-footer">{{ footer_copy }}</footer>
+
+</body>
+</html>
